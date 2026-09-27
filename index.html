@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project Hunt</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-mark">PH</div>
+            <div>
+                <div class="brand-name">Project Hunt</div>
+                <div class="brand-subtitle">Content OS</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+
+            <div class="nav-label">WORKSPACE</div>
+
+            <button
+                id="navContent"
+                class="nav-item active"
+                data-workspace="content"
+            >
+                <span>🎬</span>
+                <span>Nội dung</span>
+            </button>
+
+            <button
+                id="navProducts"
+                class="nav-item"
+                data-workspace="products"
+            >
+                <span>🛍️</span>
+                <span>Sản phẩm</span>
+            </button>
+
+            <button
+                id="navQueue"
+                class="nav-item"
+                data-workspace="queue"
+            >
+                <span>📤</span>
+                <span>Hàng chờ đăng</span>
+                <span id="sidebarQueueCount" class="sidebar-badge hidden"></span>
+            </button>
+
+            <button
+                id="navFacebook"
+                class="nav-item"
+                data-workspace="facebook"
+            >
+                <span>📘</span>
+                <span>Facebook</span>
+            </button>
+
+            <div class="nav-label automation-label">AUTOMATION</div>
+
+            <button class="nav-item" data-workspace="ai">
+                <span>✨</span>
+                <span>AI Studio</span>
+            </button>
+
+            <button class="nav-item" data-workspace="scheduler">
+                <span>⏱️</span>
+                <span>Lịch đăng</span>
+            </button>
+
+            <button class="nav-item" data-workspace="hunter">
+                <span>🎯</span>
+                <span>TikTok Hunter</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="nav-item" data-workspace="settings">
+                <span>⚙️</span>
+                <span>Cài đặt</span>
+            </button>
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <!-- ======================== -->
+        <!-- NỘI DUNG (Content)       -->
+        <!-- ======================== -->
+        <div id="workspaceContent">
+
+            <header class="topbar">
+
+                <div>
+                    <div class="eyebrow">KHO VIDEO</div>
+                    <h1>Thư viện nội dung</h1>
+                    <p>Xem video và thêm tất cả vào hàng chờ để xử lý.</p>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input
+                            id="searchInput"
+                            type="text"
+                            placeholder="Tìm video..."
+                        >
+                        <kbd>⌘ K</kbd>
+                    </div>
+                </div>
+
+            </header>
+
+
+            <section class="stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">🎬</div>
+                    <div>
+                        <div class="stat-label">TỔNG VIDEO</div>
+                        <div id="totalVideos" class="stat-value">—</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">👁</div>
+                    <div>
+                        <div class="stat-label">CÓ LƯỢT XEM</div>
+                        <div id="withViews" class="stat-value">—</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">📤</div>
+                    <div>
+                        <div class="stat-label">TRONG HÀNG CHỜ</div>
+                        <div id="selectedVideos" class="stat-value">—</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚡</div>
+                    <div>
+                        <div class="stat-label">TỔNG HÀNG CHỜ</div>
+                        <div id="readyVideos" class="stat-value">—</div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <section class="toolbar">
+
+                <div class="filters">
+
+                    <button class="filter active" data-status="all">
+                        Tất cả
+                    </button>
+
+                    <button class="filter" data-status="new">
+                        Mới
+                    </button>
+
+                    <button class="filter" data-status="selected">
+                        Đã chọn
+                    </button>
+
+                    <button class="filter" data-status="posted">
+                        Đã đăng
+                    </button>
+
+                </div>
+
+                <div class="sort-control">
+
+                    <span>Sắp xếp</span>
+
+                    <select id="sortSelect">
+                        <option value="views">Lượt xem ↓</option>
+                        <option value="views_asc">Lượt xem ↑</option>
+                        <option value="title">Tên A-Z</option>
+                        <option value="newest">Mới nhất</option>
+                    </select>
+
+                    <button
+                        id="addAllQueueButton"
+                        class="queue-button"
+                        type="button"
+                    >
+                        🚀 Thêm tất cả vào hàng chờ
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <section>
+
+                <div id="loading" class="loading">
+                    Đang tải nội dung...
+                </div>
+
+                <div id="empty" class="empty hidden">
+                    Không tìm thấy video.
+                </div>
+
+                <div id="videoGrid" class="video-grid"></div>
+
+            </section>
+
+        </div><!-- /workspaceContent -->
+
+
+        <!-- ======================== -->
+        <!-- HÀNG CHỜ ĐĂNG (Queue)   -->
+        <!-- ======================== -->
+        <div id="workspaceQueue" class="hidden">
+
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">PUBLISH WORKSPACE</div>
+                    <h1>Hàng chờ đăng</h1>
+                    <p>Video sắp xếp từ nhiều lượt xem nhất — xử lý tuần tự từ trên xuống.</p>
+                </div>
+            </header>
+
+            <!-- Stats row -->
+            <section class="queue-stats-row">
+
+                <div class="queue-stat-card">
+                    <div class="queue-stat-label">TỔNG</div>
+                    <div id="qstatTotal" class="queue-stat-value">0</div>
+                </div>
+
+                <div class="queue-stat-card need-product">
+                    <div class="queue-stat-label">CHƯA CÓ SẢN PHẨM</div>
+                    <div id="qstatNeedProduct" class="queue-stat-value">0</div>
+                </div>
+
+                <div class="queue-stat-card need-link">
+                    <div class="queue-stat-label">CHƯA CÓ LINK</div>
+                    <div id="qstatNeedLink" class="queue-stat-value">0</div>
+                </div>
+
+                <div class="queue-stat-card ready">
+                    <div class="queue-stat-label">SẴN SÀNG</div>
+                    <div id="qstatReady" class="queue-stat-value">0</div>
+                </div>
+
+                <div class="queue-stat-card posted">
+                    <div class="queue-stat-label">ĐÃ ĐĂNG</div>
+                    <div id="qstatPosted" class="queue-stat-value">0</div>
+                </div>
+
+            </section>
+
+            <!-- Filter tabs -->
+            <section class="queue-toolbar">
+
+                <div class="queue-filters">
+
+                    <button
+                        class="queue-filter active"
+                        data-qfilter="all"
+                    >Tất cả</button>
+
+                    <button
+                        class="queue-filter"
+                        data-qfilter="NEED_PRODUCT"
+                    >🔴 Chưa có sản phẩm</button>
+
+                    <button
+                        class="queue-filter"
+                        data-qfilter="NEED_LINK"
+                    >🟡 Chưa có link</button>
+
+                    <button
+                        class="queue-filter"
+                        data-qfilter="READY"
+                    >🟢 Sẵn sàng</button>
+
+                    <button
+                        class="queue-filter"
+                        data-qfilter="POSTED"
+                    >⬜ Đã đăng</button>
+
+                </div>
+
+                <div class="queue-sort-label">Sắp xếp: Lượt xem ↓</div>
+
+            </section>
+
+            <!-- Queue list -->
+            <section>
+
+                <div id="queueEmpty" class="queue-empty hidden">
+                    <div class="queue-empty-icon">📭</div>
+                    <div>Hàng chờ trống. Vào <strong>Nội dung</strong> và nhấn <strong>🚀 Thêm tất cả vào hàng chờ</strong>.</div>
+                </div>
+
+                <div id="queueList" class="queue-list"></div>
+
+            </section>
+
+        </div><!-- /workspaceQueue -->
+
+        <!-- ======================== -->
+        <!-- FACEBOOK                 -->
+        <!-- ======================== -->
+        <div id="workspaceFacebook" class="hidden">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">PUBLISHER</div>
+                    <h1>Facebook Publisher</h1>
+                    <p>Kết nối và đăng video lên Fanpage tự động.</p>
+                </div>
+            </header>
+            
+            <section style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <h2>Trạng thái kết nối</h2>
+                <div id="fbStatus" style="margin-top: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <div id="fbIndicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444;"></div>
+                    <span id="fbStatusText">🔴 Chưa kết nối</span>
+                </div>
+                <button id="fbConnectBtn" class="primary-button">Kết nối Facebook</button>
+                <button id="fbRefreshBtn" class="secondary-button" onclick="checkFbStatus()">Làm mới trạng thái</button>
+            </section>
+            
+            <section id="fbPagesSection" class="hidden" style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <h2>Chọn Trang mặc định</h2>
+                <p style="color: var(--muted); margin-bottom: 15px; font-size: 14px;">Chọn trang Facebook bạn muốn đăng bài. Có thể thay đổi khi đăng từng video.</p>
+                
+                <select id="fbPageSelect" style="width: 100%; max-width: 400px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: white; font-size: 14px;">
+                    <!-- Options injected via JS -->
+                </select>
+            </section>
+        </div><!-- /workspaceFacebook -->
+
+
+        <!-- ======================== -->
+        <!-- PLACEHOLDER              -->
+        <!-- ======================== -->
+        <div id="workspaceScheduler" class="hidden">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">AUTOMATION</div>
+                    <h1>Auto Scheduler</h1>
+                    <p>Lên lịch đăng bài tự động lên Facebook.</p>
+                </div>
+            </header>
+            
+            <section style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div id="schedIndicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444;"></div>
+                        <span id="schedStatusText" style="font-weight: bold; font-size: 16px;">⚪ Đang tắt</span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="schedStartBtn" class="primary-button" style="padding: 8px 16px;">▶ BẬT</button>
+                        <button id="schedPauseBtn" class="secondary-button" style="padding: 8px 16px; display: none;">⏸ TẠM DỪNG</button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px;">Số bài/ngày</label>
+                        <input id="schedPostsPerDay" type="number" min="1" max="20" value="5" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px;">Khoảng cách đăng</label>
+                        <select id="schedInterval" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white;">
+                            <option value="5">5 phút</option>
+                            <option value="10">10 phút</option>
+                            <option value="15">15 phút</option>
+                            <option value="30">30 phút</option>
+                            <option value="60">1 giờ</option>
+                            <option value="120" selected>2 giờ</option>
+                            <option value="240">4 giờ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px;">Giờ bắt đầu</label>
+                        <input id="schedStartTime" type="time" value="09:00" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px;">Trang đăng bài (Page)</label>
+                        <select id="schedPageSelect" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white;">
+                            <!-- Options injected via JS from fb pages -->
+                        </select>
+                    </div>
+                </div>
+            </section>
+            
+            <section style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <h2>Tiếp theo</h2>
+                <div style="margin-top: 15px; padding: 15px; background: var(--surface); border-radius: 8px; border: 1px solid var(--border);">
+                    <div id="schedNextTime" style="font-size: 18px; font-weight: bold; color: #60a5fa; margin-bottom: 5px;">—</div>
+                    <div id="schedNextVideo" style="font-size: 14px; color: white; margin-bottom: 5px;">Chưa xác định</div>
+                    <div id="schedNextViews" style="font-size: 12px; color: var(--muted);"></div>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 14px; color: var(--muted);">
+                    Hôm nay: <span id="schedTodayCount" style="color: white; font-weight: bold;">0</span> / <span id="schedTodayTotal">0</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: var(--muted); font-style: italic;">
+                    * Lưu ý: Scheduler chỉ chạy khi bạn mở tab trình duyệt này.
+                </div>
+            </section>
+
+            <section style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <h2>Video sẵn sàng đăng</h2>
+                <div id="schedReadyCount" style="margin-top: 10px; margin-bottom: 15px; font-size: 14px; font-weight: bold; color: #22c55e;">
+                    🟢 Có 0 video sẵn sàng
+                </div>
+                <div id="schedReadyList" style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ======================== -->
+        <!-- PLACEHOLDER              -->
+        <!-- ======================== -->
+        <div id="workspacePlaceholder" class="hidden">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">SẮP RA MẮT</div>
+                    <h1 id="placeholderTitle">—</h1>
+                    <p>Tính năng này chưa được triển khai.</p>
+                </div>
+            </header>
+            <div class="loading">🚧 Sắp có...</div>
+        </div>
+
+        <!-- ======================== -->
+        <!-- TIKTOK SOURCE HUNTER     -->
+        <!-- ======================== -->
+        <div id="workspaceHunter" class="hidden">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">AUTOMATION</div>
+                    <h1>TikTok Source Hunter</h1>
+                    <p>Quét metadata kênh TikTok, lọc video, chọn và tải.</p>
+                </div>
+            </header>
+
+            <!-- Input + Scan -->
+            <section style="margin: 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px;">URL TikTok Channel</label>
+                        <input id="hunterUrlInput" type="text"
+                            placeholder="https://www.tiktok.com/@username hoặc @username"
+                            style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: white; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <button id="hunterScanBtn" class="primary-button" style="padding: 10px 20px; white-space: nowrap;">
+                        🔎 QUÉT KÊnh
+                    </button>
+                </div>
+
+                <div id="hunterScanStatus" style="margin-top: 12px; font-size: 14px; color: var(--muted); min-height: 20px;"></div>
+            </section>
+
+            <!-- Filters + Sort (hidden until scanned) -->
+            <section id="hunterFiltersSection" class="hidden" style="margin: 0 20px 20px; padding: 16px 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">Lọc view</label>
+                        <select id="hunterFilterViews" style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white; font-size: 13px;">
+                            <option value="0">Tất cả</option>
+                            <option value="100000">100K+</option>
+                            <option value="300000">300K+</option>
+                            <option value="500000">500K+</option>
+                            <option value="1000000">1M+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">Sắp xếp</label>
+                        <select id="hunterSort" style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: white; font-size: 13px;">
+                            <option value="views_desc">View cao → thấp</option>
+                            <option value="views_asc">View thấp → cao</option>
+                            <option value="date_desc">Mới → cũ</option>
+                            <option value="date_asc">Cũ → mới</option>
+                        </select>
+                    </div>
+                    <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+                        <button id="hunterSelectAll" class="secondary-button" style="padding: 7px 14px; font-size: 13px;">Chọn tất cả</button>
+                        <button id="hunterDeselectAll" class="secondary-button" style="padding: 7px 14px; font-size: 13px;">Bỏ chọn</button>
+                        <button id="hunterDownloadSelected" class="primary-button" style="padding: 7px 14px; font-size: 13px;">⬇️ TẢI ĐÃ CHỌ N</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video List -->
+            <section id="hunterVideoSection" class="hidden" style="margin: 0 20px 20px;">
+                <div id="hunterVideoList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <div id="hunterPagination" style="margin-top: 16px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;"></div>
+            </section>
+
+            <!-- Channel History -->
+            <section style="margin: 0 20px 20px; padding: 20px; background: var(--surface-2); border-radius: 12px; border: 1px solid var(--border);">
+                <h3 style="margin: 0 0 12px; font-size: 14px; color: var(--muted);">Kênh gần đây</h3>
+                <div id="hunterHistory" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="color: var(--muted); font-size: 13px;">Chưa có lịch sử.</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ======================== -->
+        <!-- SẢN PHẨM (Products)      -->
+        <!-- ======================== -->
+        <div id="workspaceProducts" class="hidden">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">PRODUCT VAULT</div>
+                    <h1>Sản phẩm</h1>
+                    <p>Quản lý sản phẩm và link tiếp thị.</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input
+                            id="searchProductInput"
+                            type="text"
+                            placeholder="Tìm sản phẩm..."
+                        >
+                    </div>
+                </div>
+            </header>
+
+            <section class="queue-stats-row">
+                <div class="queue-stat-card">
+                    <div class="queue-stat-label">TỔNG SẢN PHẨM</div>
+                    <div id="pstatTotal" class="queue-stat-value">0</div>
+                </div>
+            </section>
+
+            <section>
+                <div id="productList" class="queue-list"></div>
+            </section>
+        </div><!-- /workspaceProducts -->
+
+    </main>
+
+</div>
+
+
+<!-- VIDEO MODAL -->
+<div id="videoModal" class="modal hidden">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel">
+
+        <button id="closeModal" class="close-button">×</button>
+
+        <div class="modal-video">
+            <video id="modalVideo" controls playsinline></video>
+        </div>
+
+        <div class="modal-content">
+
+            <div class="modal-meta">
+                <span id="modalViews"></span>
+                <span id="modalStatus"></span>
+            </div>
+
+            <h2 id="modalTitle"></h2>
+
+            <div class="modal-source">
+                <span id="modalChannel"></span>
+                <a id="modalSource" href="#" target="_blank" rel="noopener">
+                    Nguồn ↗
+                </a>
+            </div>
+
+            <div class="modal-actions">
+                <button class="secondary-button">✨ Tạo caption</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-panel" style="width: 600px; max-width: 100%;">
+        <button id="closeProductModal" class="close-button">×</button>
+        <div class="modal-content">
+            <h2>Thêm sản phẩm cho video</h2>
+            <div class="modal-meta" style="margin-bottom: 20px;">
+                <span id="pmVideoTitle" style="font-weight: 600; color: white;"></span>
+                <span id="pmVideoViews"></span>
+                <span id="pmVideoChannel"></span>
+            </div>
+
+            <div id="pmProductSlots" style="display: flex; flex-direction: column; gap: 15px;">
+                <!-- Products will be injected here -->
+            </div>
+
+            <button id="pmAddProductBtn" class="secondary-button" style="width: 100%; margin-top: 15px; display: none;">+ Thêm sản phẩm</button>
+
+            <div id="pmLinkSection" style="margin-top: 20px; display: none; padding-top: 20px; border-top: 1px solid var(--border);">
+                <h3 style="font-size: 14px; margin-top: 0; margin-bottom: 15px;">Link affiliate</h3>
+                <button id="pmCopyAllLinksBtn" class="primary-button" style="width: 100%;">Copy tất cả link</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRODUCT SELECT/CREATE MODAL -->
+<div id="productSelectModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-panel" style="width: 600px; max-width: 100%;">
+        <button id="closeProductSelectModal" class="close-button">×</button>
+        <div class="modal-content">
+            <h2>Chọn hoặc Tạo sản phẩm</h2>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 15px;">
+                <button id="psmTabSelect" class="primary-button" style="flex: 1;">Chọn sản phẩm có sẵn</button>
+                <button id="psmTabCreate" class="secondary-button" style="flex: 1;">+ Tạo sản phẩm mới</button>
+            </div>
+
+            <div id="psmSelectView">
+                <div class="search-box" style="width: 100%; margin-bottom: 15px;">
+                    <span>⌕</span>
+                    <input id="psmSearchInput" type="text" placeholder="Tìm sản phẩm...">
+                </div>
+                <div id="psmProductList" class="queue-list" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+
+            <div id="psmCreateView" class="hidden">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block;">Tên sản phẩm:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="pcName" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: white;" placeholder="Nhập tên sản phẩm">
+                        <button id="pcCopyNameBtn" class="secondary-button" type="button">Copy tên</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block;">Affiliate URL:</label>
+                    <input type="text" id="pcAffiliateUrl" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: white;" placeholder="Dán link affiliate vào đây">
+                </div>
+
+                <button id="pcSaveBtn" class="primary-button" style="width: 100%;">Lưu sản phẩm</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- PUBLISH MODAL -->
+<div id="publishModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-panel" style="width: 700px; max-width: 100%;">
+        <button id="closePublishModal" class="close-button">×</button>
+        <div class="modal-content">
+            <h2>🚀 Đăng lên Facebook</h2>
+            <div class="modal-meta" style="margin-bottom: 20px;">
+                <span id="pubVideoTitle" style="font-weight: 600; color: white;"></span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Cột trái: Nội dung -->
+                <div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block;">Trang đăng bài:</label>
+                        <select id="pubPageSelect" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: white;"></select>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 11px; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between;">
+                            <span>Caption (Tiêu đề):</span>
+                            <button id="btnGenCaption" class="queue-btn" style="padding: 2px 8px;">✨ Auto Generate</button>
+                        </label>
+                        <textarea id="pubCaption" style="width: 100%; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: white; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 11px; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between;">
+                            <span>Bình luận (Affiliate):</span>
+                            <button id="btnGenComment" class="queue-btn" style="padding: 2px 8px;">✨ Auto Generate</button>
+                        </label>
+                        <textarea id="pubComment" style="width: 100%; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: white; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Control & Status -->
+                <div style="padding-left: 20px; border-left: 1px solid var(--border); display: flex; flex-direction: column;">
+                    <div style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; background: #000;">
+                        <video id="pubVideoPreview" controls playsinline style="width: 100%; max-height: 250px; display: block;"></video>
+                    </div>
+
+                    <div id="pubStatusBox" class="hidden" style="margin-bottom: 15px; padding: 15px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border);">
+                        <!-- Status text injected here -->
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: auto;">
+                        <button id="pubCancelBtn" class="secondary-button" style="flex: 1; font-size: 14px; padding: 12px;">Hủy</button>
+                        <button id="pubSubmitBtn" class="primary-button" style="flex: 2; font-size: 14px; padding: 12px; font-weight: bold;">🚀 ĐĂNG LÊN FACEBOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='app.js') }}"
+></script>
+
+</body>
+</html>
